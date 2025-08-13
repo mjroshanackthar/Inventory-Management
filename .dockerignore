@@ -1,0 +1,9 @@
+**/.mvn/wrapper/maven-wrapper.jar
+**/target/
+**/.git
+**/.gitignore
+**/*.md
+**/mvnw.cmd
+**/mvnw
+**/Dockerfile
+**/.dockerignore
