@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+.env
+.gemini/
+.system_generated/
+*.log
+*.code-workspace
+*.txt
+*.csv

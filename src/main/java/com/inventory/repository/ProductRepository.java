@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByUser_Id(Long userId);
     Optional<Product> findByIdAndUser_Id(Long id, Long userId);
+    Optional<Product> findByNameIgnoreCaseAndUser_Id(String name, Long userId);
 }

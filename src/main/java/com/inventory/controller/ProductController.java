@@ -35,14 +35,26 @@ public class ProductController {
         return productRepository.findAllByUser_Id(userId);
     }
 
-    // ✅ Create a new product with validation
+    // ✅ Create a new product or deduct stock if it already exists
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
         Long userId = getCurrentUserId();
         User owner = userRepository.findById(userId).orElseThrow();
-        product.setUser(owner);
-        Product savedProduct = productRepository.save(product);
-        return ResponseEntity.ok(savedProduct);
+        
+        return productRepository.findByNameIgnoreCaseAndUser_Id(product.getName().trim(), userId)
+                .map(existingProduct -> {
+                    // Deduct entered quantity from existing stock
+                    existingProduct.setQuantity(Math.max(0, existingProduct.getQuantity() - product.getQuantity()));
+                    existingProduct.setPrice(product.getPrice()); // update to latest price
+                    Product savedProduct = productRepository.save(existingProduct);
+                    return ResponseEntity.ok(savedProduct);
+                })
+                .orElseGet(() -> {
+                    product.setUser(owner);
+                    product.setName(product.getName().trim());
+                    Product savedProduct = productRepository.save(product);
+                    return ResponseEntity.ok(savedProduct);
+                });
     }
 
     // ✅ Get product by ID (returns 404 if not found)

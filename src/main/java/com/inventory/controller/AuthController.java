@@ -1,7 +1,9 @@
 package com.inventory.controller;
 
+import com.inventory.dto.GoogleAuthRequest;
 import com.inventory.dto.JwtResponse;
 import com.inventory.dto.LoginRequest;
+import com.inventory.service.GoogleAuthService;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +38,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    GoogleAuthService googleAuthService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -86,5 +91,14 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully!");
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<?> authenticateWithGoogle(@Valid @RequestBody GoogleAuthRequest request) {
+        try {
+            return ResponseEntity.ok(googleAuthService.authenticateWithGoogle(request.getIdToken()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body("Google authentication failed: " + ex.getMessage());
+        }
     }
 }
