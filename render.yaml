@@ -4,7 +4,7 @@ services:
     name: inventory-backend
     env: java
     buildCommand: mvn clean package -DskipTests
-    startCommand: java -jar target/inventory-system-0.0.1-SNAPSHOT.jar
+    startCommand: java -Djava.net.preferIPv4Stack=true -jar target/inventory-system-0.0.1-SNAPSHOT.jar
     envVars:
       JDBC_URL: ${JDBC_URL}
       JDBC_USER: ${JDBC_USER}
